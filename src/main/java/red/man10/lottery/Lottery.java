@@ -1,8 +1,13 @@
 package red.man10.lottery;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.List;
 import java.util.Random;
@@ -27,6 +32,8 @@ public class Lottery {
     double   current_stock;
     int      max_chance;
     int      count;
+    int      win;
+    String      command;
 
 
     boolean hasMoney(double price){
@@ -44,6 +51,7 @@ public class Lottery {
     void    saveConfig(){
 
 
+        plugin.getConfig().set(name + ".win",win);
         plugin.getConfig().set(name + ".count",count);
         plugin.getConfig().set(name + ".current_stock",current_stock);
         plugin.saveConfig();
@@ -57,10 +65,12 @@ public class Lottery {
 
         this.name = name;
         this.prefix = plugin.getConfig().getString(name + ".prefix");
+        this.command = plugin.getConfig().getString(name + ".command");
         this.dispName = plugin.getConfig().getString(name + ".dispName");
         this.lore = plugin.getConfig().getStringList(name+".lore");
         this.max_chance = plugin.getConfig().getInt(name+".max_chance");
         this.count = plugin.getConfig().getInt(name+".count");
+        this.win = plugin.getConfig().getInt(name+".win");
         this.prize = plugin.getConfig().getDouble(name+".prize");
         this.price = plugin.getConfig().getDouble(name+".price");
         this.stock = plugin.getConfig().getDouble(name+".stock");
@@ -117,9 +127,9 @@ public class Lottery {
                 serverMessage(" §4§l§n" + p.getName() + "は"+n+"枚購入し、当選した！！");
                 serverMessage(" §6§l§n"+ p.getName()+"は"+(int)payout+"円をゲットした！！！！");
                 current_stock = 0;
+                win++;
                 depositMoney(p,payout);
                 saveConfig();
-                p.getWorld().playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1,0);
 
         return n;
     }
@@ -143,6 +153,16 @@ public class Lottery {
             return true;
         }
         return false;
+    }
+
+    boolean playSound(Player p){
+        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1,0);
+
+        p.sendMessage(command);
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+
+        return true;
     }
 
 
