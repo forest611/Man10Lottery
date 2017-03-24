@@ -1,0 +1,11 @@
+name: Man10Big
+dispName: &lまん１０ビッグ
+lore:
+  - テキスト１
+  - テキスト２
+min_chance: 1
+max_chance: 100000
+pay: 500000000
+price: 10000
+stock: 5000
+current_stock: 0

@@ -1,0 +1,12 @@
+Man10Big:
+  prefix: §7§l[§d§lMan10§f§lビッグ§a§l宝くじ§f§l]
+  dispName: まん１０ビッグ
+  lore:
+    - テキスト１
+    - テキスト２
+  price: 10000
+  prize: 500000000
+  stock: 5000
+  max_chance: 100000
+  current_stock: 0
+  count: 0

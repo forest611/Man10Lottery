@@ -1,0 +1,11 @@
+name: Man10Lottery
+version: ${project.version}
+main: red.man10.lottery.LotteryPlugin
+prefix: Man10Lottery
+authors: [takatronix]
+website: http://man10.red
+commands:
+   mkuji:
+      description: Man10 Lottery
+      permission: man10.lottery
+      permission-message: You don't have <permission>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Man10Lottery:jar">
+    <output-path>$PROJECT_DIR$/../spigot/plugins/</output-path>
+    <root id="archive" name="Man10Lottery.jar">
+      <element id="module-output" name="Man10Lottery" />
+    </root>
+  </artifact>
+</component>
