@@ -117,7 +117,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
     @EventHandler
     public void onInvclick(InventoryClickEvent e) {
         Player p = (Player)e.getWhoClicked();
-        p.sendMessage(e.getEventName());
+      //  p.sendMessage(e.getEventName());
     }
 
     @EventHandler
