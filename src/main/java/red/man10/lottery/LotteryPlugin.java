@@ -12,15 +12,18 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import red.man10.VaultManager;
 
 public final class LotteryPlugin extends JavaPlugin implements Listener {
-
+    VaultManager vault = null;
     @Override
     public void onEnable() {
         // Plugin startup logic
         getServer().getPluginManager().registerEvents (this,this);
         this.saveDefaultConfig();
         loadLottery();
+        vault = new VaultManager(this);
+
     }
 
     @Override
@@ -122,22 +125,25 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         Player p = (Player)e.getPlayer();
 
         if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK ) {
-            p.sendMessage("左クリック");
+           // p.sendMessage("左クリック");
 
             ItemStack item = p.getInventory().getItemInMainHand();
             if(nano.isController(item)){
-                nano.buy(p,item.getAmount());
+                nano.open(p,item.getAmount());
+                item.setAmount(0);
             }
             if(mini.isController(item)){
-                mini.buy(p,item.getAmount());
+                mini.open(p,item.getAmount());
+                item.setAmount(0);
             }
             if(nom.isController(item)){
-                nom.buy(p,item.getAmount());
+                nom.open(p,item.getAmount());
+                item.setAmount(0);
             }
             if(big.isController(item)){
-                big.buy(p,item.getAmount());
+                big.open(p,item.getAmount());
+                item.setAmount(0);
             }
-            item.setAmount(0);
 
         }
     }

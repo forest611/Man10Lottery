@@ -33,14 +33,20 @@ public class Lottery {
     String      command;
 
 
-    boolean hasMoney(double price){
-        return true;
+    boolean hasMoney(Player p,double price){
+        double bal = plugin.vault.getBalance(p.getUniqueId());
+        if(bal >= price) {
+            return true;
+        }
+        return false;
     }
+
     boolean withdrawMoney(Player p,double price){
-        return true;
+        return plugin.vault.withdraw(p.getUniqueId(),price);
     }
+
     boolean depositMoney(Player p,double price){
-        return true;
+        return plugin.vault.deposit(p.getUniqueId(),price);
     }
     void    serverMessage(String string){
         Bukkit.getServer().broadcastMessage(prefix + string);
@@ -82,7 +88,7 @@ public class Lottery {
 
 
     int buy(Player p){
-        if(hasMoney(price) == false){
+        if(hasMoney(p,price) == false){
             return -1;
         }
         if(withdrawMoney(p,price) == false){
@@ -101,11 +107,26 @@ public class Lottery {
         return 1;
     }
 
+    int check(Player p){
+        count ++;
+
+        boolean result = cast(p);
+
+        //      あたり
+        if(result == true){
+            return 0;
+        }
+
+        current_stock += stock;
+        return 1;
+    }
+
+
     //      指定枚数購入する
     int buy(Player p,int num){
         int n = 0;
         for(int i = 0;i < num;i++){
-            int ret = buy(p);
+            int ret = check(p);
             if(ret == -1){
                 saveConfig();
 
@@ -134,11 +155,39 @@ public class Lottery {
              }
         }
 
-    saveConfig();
-    double paid = price * n;
-    double price = prize + current_stock;
+        saveConfig();
+          double paid = price * n;
+         double price = prize + current_stock;
         p.sendMessage(prefix + " " + dispName+"を"+n+"枚購入し、" + (int)paid+"円支払いました");
-                p.sendMessage(prefix + " はずれ！ §e§l賞金＋ストックが、"+(int)price+"円にアップした！！");
+        p.sendMessage(prefix + " はずれ！ §e§l賞金＋ストックが、"+(int)price+"円にアップした！！");
+        return n;
+    }
+    //      指定枚数開く
+    int open(Player p,int num){
+        int n = 0;
+        for(int i = 0;i < num;i++){
+            int ret = check(p);
+
+            n++;
+            //      あたり
+            if(ret == 0){
+                double payout = prize + current_stock;
+                serverMessage(" §b§l§n " + this.dispName+ " 当選！！！！   ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!! ");
+                serverMessage(" §6§l§n"+ p.getName()+"は"+(int)payout+"円をゲットした！！！！");
+                current_stock = 0;
+                win++;
+                depositMoney(p,payout);
+                saveConfig();
+                playSound(p);
+
+                return n;
+            }
+        }
+
+        saveConfig();
+        double paid = price * n;
+        double price = prize + current_stock;
+        p.sendMessage(prefix + "§f§lはずれ！!  現在の賞金＋ストックは§e§l"+(int)price+"円です");
         return n;
     }
 
