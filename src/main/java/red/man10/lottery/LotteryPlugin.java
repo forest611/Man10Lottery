@@ -37,7 +37,13 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
             showHelp(sender);
             return true;
         }
-
+        //      引数がない場合
+        if (args.length == 1) {
+            if(args[1].equalsIgnoreCase("help")){
+                showHelp(p);
+            }
+            return true;
+        }
         if(args[0].equalsIgnoreCase("reload")){
             sender.sendMessage("reloaded.");
             reloadConfig();
@@ -72,10 +78,31 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
             }
 
 
-            p.sendMessage(l.prefix+ l.name +"buy:"+l.count + " win:"+l.win);
+            p.sendMessage(l.prefix+ l.name +" buy:"+l.count + " win:"+l.win);
+            if(l.win == 0){
+                return true;
+            }
+            p.sendMessage(l.prefix+ "確率: 1/"+l.count / l.win);
+
             return true;
         }
+        if(args[0].equalsIgnoreCase("get")){
+            int     n = 1;
+            if(args.length != 2){
+                return false;
+            }
 
+            Lottery l = new Lottery(this);
+            if(l.load(args[1]) == false){
+                p.sendMessage("§4§l"+args[1]+":指定された宝くじはありません");
+                return false;
+            }
+
+            l.load(args[1]);
+            l.giveController(p);
+
+            return true;
+        }
 
         return true;
     }
@@ -87,7 +114,9 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         p.sendMessage("§c/mkuji buy [くじ名] [枚数]");
         p.sendMessage("§c/mkuji get [くじ名] [枚数]");
         p.sendMessage("§c/mkuji reload - リロード");
-        p.sendMessage("§c/mkuji stat - 統計表示");
+        p.sendMessage("§c/mkuji stat [くじ名] - 統計表示");
+
+        p.sendMessage("クジの種類: Man10Nano/Man10Mini/Man10/Man10Big");
         p.sendMessage("§e  by takatronix http://man10.red");
         p.sendMessage("§c* red commands for Admin");
     }

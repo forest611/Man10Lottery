@@ -1,14 +1,14 @@
 package red.man10.lottery;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -75,6 +75,7 @@ public class Lottery {
         this.price = plugin.getConfig().getDouble(name+".price");
         this.stock = plugin.getConfig().getDouble(name+".stock");
         this.current_stock = plugin.getConfig().getDouble(name+".current_stock");
+        this.lore = plugin.getConfig().getStringList(name+".lore");
         return true;
     }
     public String desc(){
@@ -130,9 +131,10 @@ public class Lottery {
                 win++;
                 depositMoney(p,payout);
                 saveConfig();
+                playSound(p);
 
-        return n;
-    }
+               return n;
+             }
 }
 
     saveConfig();
@@ -158,12 +160,34 @@ public class Lottery {
     boolean playSound(Player p){
         p.getWorld().playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1,0);
 
-        p.sendMessage(command);
-
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 
         return true;
     }
 
+    Material controllerMaterial = Material.PAPER;
+
+    boolean isController(ItemStack item){
+        if(item.getType() != controllerMaterial){
+            return false;
+        }
+        String name = item.getItemMeta().getDisplayName();
+        if(name == null){
+            return false;
+        }
+        if(!dispName.contentEquals(name)){
+            return false;
+        }
+        return true;
+    }
+
+
+    void giveController(Player p){
+        ItemStack item = new ItemStack(controllerMaterial,1);
+        ItemMeta im = item.getItemMeta();
+        im.setDisplayName(dispName);
+        im.setLore(lore);
+        item.setItemMeta(im);
+        p.getInventory().addItem(item);
+    }
 
 }

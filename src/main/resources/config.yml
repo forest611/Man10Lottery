@@ -1,6 +1,6 @@
 Man10Big:
   prefix: §f§l[§d§lMan10§f§lビッグ§a§l宝くじ§f§l]
-  dispName: まん１０ビッグ(10000円)
+  dispName: まん１０ビッグ
   lore:
   - テキスト１
   - テキスト２
@@ -11,10 +11,24 @@ Man10Big:
   current_stock: 0.0
   count: 0
   win: 0
-  command: say test
+  command:
+Man10:
+  prefix: §f§l[§d§lMan10§f§lミニ§a§l宝くじ§f§l]
+  dispName: まん１０くじ
+  lore:
+  - テキスト１
+  - テキスト２
+  price: 1000
+  prize: 50000000
+  stock: 500
+  max_chance: 10000
+  current_stock: 0.0
+  count: 0
+  win: 0
+  command:
 Man10Mini:
   prefix: §f§l[§d§lMan10§f§lミニ§a§l宝くじ§f§l]
-  dispName: まん１０ミニ(100円)
+  dispName: まん１０ミニ
   lore:
   - テキスト１
   - テキスト２
@@ -25,9 +39,10 @@ Man10Mini:
   current_stock: 0.0
   count: 0
   win: 0
+  command:
 Man10Nano:
   prefix: §f§l[§d§lMan10§f§lナノ§a§l宝くじ§f§l]
-  dispName: まん１０ナノ(10円)
+  dispName: まん１０ナノ
   lore:
   - テキスト１
   - テキスト２
@@ -38,4 +53,5 @@ Man10Nano:
   current_stock: 0.0
   count: 0
   win: 0
+  command:
 
