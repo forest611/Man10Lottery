@@ -1,11 +1,8 @@
 package red.man10.lottery;
 
 import org.bukkit.*;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -135,7 +132,7 @@ public class Lottery {
 
                return n;
              }
-}
+        }
 
     saveConfig();
     double paid = price * n;
@@ -147,20 +144,17 @@ public class Lottery {
 
     //      くじを引く
     boolean cast(Player p){
-//        long seed = System.currentTimeMillis();
         Random rndSeed = new Random();
         int val = rndSeed.nextInt(max_chance);
-//        p.sendMessage("引いた:"+val);
         if(val == 0){
             return true;
         }
         return false;
     }
 
+
     boolean playSound(Player p){
         p.getWorld().playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1,0);
-
-
         return true;
     }
 
@@ -174,6 +168,10 @@ public class Lottery {
         if(name == null){
             return false;
         }
+        if(dispName == null){
+            return false;
+        }
+
         if(!dispName.contentEquals(name)){
             return false;
         }
@@ -189,5 +187,6 @@ public class Lottery {
         item.setItemMeta(im);
         p.getInventory().addItem(item);
     }
+
 
 }

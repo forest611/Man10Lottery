@@ -5,7 +5,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LotteryPlugin extends JavaPlugin implements Listener {
@@ -15,8 +20,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         // Plugin startup logic
         getServer().getPluginManager().registerEvents (this,this);
         this.saveDefaultConfig();
-        this.reloadConfig();
-
+        loadLottery();
     }
 
     @Override
@@ -107,7 +111,36 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         return true;
     }
 
+    @EventHandler
+    public void onInvclick(InventoryClickEvent e) {
+        Player p = (Player)e.getWhoClicked();
+        p.sendMessage(e.getEventName());
+    }
 
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        Player p = (Player)e.getPlayer();
+
+        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK ) {
+            p.sendMessage("左クリック");
+
+            ItemStack item = p.getInventory().getItemInMainHand();
+            if(nano.isController(item)){
+                nano.buy(p,item.getAmount());
+            }
+            if(mini.isController(item)){
+                mini.buy(p,item.getAmount());
+            }
+            if(nom.isController(item)){
+                nom.buy(p,item.getAmount());
+            }
+            if(big.isController(item)){
+                big.buy(p,item.getAmount());
+            }
+            item.setAmount(0);
+
+        }
+    }
 
     void showHelp(CommandSender p){
         p.sendMessage("§e============== §d●§f●§a●§e Man10宝くじ §d●§f●§a● §e===============");
@@ -120,5 +153,19 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         p.sendMessage("§e  by takatronix http://man10.red");
         p.sendMessage("§c* red commands for Admin");
     }
+
+    Lottery    nano = new Lottery(this);
+    Lottery    mini = new Lottery(this);
+    Lottery    nom = new Lottery(this);
+    Lottery    big = new Lottery(this);
+
+    void       loadLottery(){
+        nano.load("Man10Nano");
+        mini.load("Man10Mini");
+        nom.load("Man10");
+        big.load("Man10Big");
+    }
+
+
 
 }
