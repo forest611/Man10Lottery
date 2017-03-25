@@ -154,7 +154,7 @@ public class Lottery {
 
 
     boolean playSound(Player p){
-        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1,0);
+        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_DEATH,1,2);
         return true;
     }
 
