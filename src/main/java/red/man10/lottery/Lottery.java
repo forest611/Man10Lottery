@@ -144,7 +144,7 @@ public class Lottery {
                 double payout = prize + current_stock;
                 serverMessage(" §b§l§n " + this.dispName+ " 当選！！！！   ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!! ");
                 serverMessage(" §4§l§n" + p.getName() + "は"+n+"枚購入し、当選した！！");
-                serverMessage(" §6§l§n"+ p.getName()+"は"+(int)payout+"円をゲットした！！！！");
+                serverMessage(" §6§l§n"+ p.getName()+"は"+payout+"円をゲットした！！！！");
                 current_stock = 0;
                 win++;
                 depositMoney(p,payout);
@@ -158,8 +158,8 @@ public class Lottery {
         saveConfig();
           double paid = price * n;
          double price = prize + current_stock;
-        p.sendMessage(prefix + " " + dispName+"を"+n+"枚購入し、" + (int)paid+"円支払いました");
-        p.sendMessage(prefix + " はずれ！ §e§l賞金＋ストックが、"+(int)price+"円にアップした！！");
+        p.sendMessage(prefix + " " + dispName+"を"+n+"枚購入し、" + paid+"円支払いました");
+        p.sendMessage(prefix + " はずれ！ §e§l賞金＋ストックが、"+price+"円にアップした！！！");
         return n;
     }
     //      指定枚数開く
@@ -167,27 +167,24 @@ public class Lottery {
         int n = 0;
         for(int i = 0;i < num;i++){
             int ret = check(p);
-
             n++;
             //      あたり
             if(ret == 0){
                 double payout = prize + current_stock;
                 serverMessage(" §b§l§n " + this.dispName+ " 当選！！！！   ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!! ");
-                serverMessage(" §6§l§n"+ p.getName()+"は"+(int)payout+"円をゲットした！！！！");
+                serverMessage(" §6§l§n"+ p.getName()+"は"+payout+"円をゲットした！！！！");
                 current_stock = 0;
                 win++;
                 depositMoney(p,payout);
                 saveConfig();
                 playSound(p);
-
                 return n;
             }
         }
 
         saveConfig();
-        double paid = price * n;
         double price = prize + current_stock;
-        p.sendMessage(prefix + "§f§lはずれ！!  現在の賞金＋ストックは§e§l"+(int)price+"円です");
+        p.sendMessage(prefix + "§f§lはずれ！!  現在の賞金＋ストックは§e§l"+price+"円です");
         return n;
     }
 

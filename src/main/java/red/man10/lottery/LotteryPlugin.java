@@ -44,11 +44,8 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
             showHelp(sender);
             return true;
         }
-        //      引数がない場合
-        if (args.length == 1) {
-            if(args[1].equalsIgnoreCase("help")){
-                showHelp(p);
-            }
+        if(args[0].equalsIgnoreCase("help")){
+            showHelp(p);
             return true;
         }
         if(args[0].equalsIgnoreCase("reload")){
