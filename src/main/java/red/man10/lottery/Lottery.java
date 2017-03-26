@@ -184,7 +184,7 @@ public class Lottery {
 
         saveConfig();
         double price = prize + current_stock;
-        p.sendMessage(prefix + "§f§lはずれ！!("+num+"枚)   現在の賞金＋ストックは§e§l"+price+"円です");
+        p.sendMessage(prefix + "  §9§lはずれ!!!§f("+num+"枚) §f§l現在の賞金＋ストックは§e§l"+price+"円です");
         return n;
     }
 
