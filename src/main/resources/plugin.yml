@@ -7,5 +7,3 @@ website: http://man10.red
 commands:
    mkuji:
       description: Man10 Lottery
-      permission: man10.lottery
-      permission-message: You don't have <permission>

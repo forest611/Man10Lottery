@@ -2,10 +2,7 @@ package red.man10.lottery;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -35,10 +32,7 @@ public class Lottery {
 
     boolean hasMoney(Player p,double price){
         double bal = plugin.vault.getBalance(p.getUniqueId());
-        if(bal >= price) {
-            return true;
-        }
-        return false;
+        return bal >= price;
     }
 
     boolean withdrawMoney(Player p,double price){
@@ -87,25 +81,25 @@ public class Lottery {
     }
 
 
-    int buy(Player p){
-        if(hasMoney(p,price) == false){
-            return -1;
-        }
-        if(withdrawMoney(p,price) == false){
-            return -2;
-        }
-        count ++;
-
-        boolean result = cast(p);
-
-        //      あたり
-        if(result == true){
-            return 0;
-        }
-
-        current_stock += stock;
-        return 1;
-    }
+//    int buy(Player p){
+//        if(!hasMoney(p, price)){
+//            return -1;
+//        }
+//        if(!withdrawMoney(p, price)){
+//            return -2;
+//        }
+//        count ++;
+//
+//        boolean result = cast(p);
+//
+//        //      あたり
+//        if(result){
+//            return 0;
+//        }
+//
+//        current_stock += stock;
+//        return 1;
+//    }
 
     int check(Player p){
         count ++;
@@ -113,7 +107,7 @@ public class Lottery {
         boolean result = cast(p);
 
         //      あたり
-        if(result == true){
+        if(result){
             return 0;
         }
 
@@ -123,7 +117,7 @@ public class Lottery {
 
 
     //      指定枚数購入する
-    int buy(Player p,int num){
+    void buy(Player p, int num){
         int n = 0;
         for(int i = 0;i < num;i++){
             int ret = check(p);
@@ -131,12 +125,12 @@ public class Lottery {
                 saveConfig();
 
                 p.sendMessage(prefix + " §2&l宝くじを買うお金が足りません");
-                return n;
+                return;
             }
             if(ret == -2){
                 saveConfig();
                 p.sendMessage(prefix + " §2&l支払いに失敗しました");
-                return n;
+                return;
             }
             n++;
             //      あたり
@@ -148,19 +142,21 @@ public class Lottery {
                 current_stock = 0;
                 win++;
                 depositMoney(p,payout);
-                saveConfig();
+
+                LotteryPlugin.es.execute(this::saveConfig);
+
                 playSound(p);
 
-               return n;
+               return;
              }
         }
 
-        saveConfig();
+        LotteryPlugin.es.execute(this::saveConfig);
+
           double paid = price * n;
          double price = prize + current_stock;
         p.sendMessage(prefix + " " + dispName+"を"+n+"枚購入し、" + paid+"円支払いました");
         p.sendMessage(prefix + " はずれ！ §e§l賞金＋ストックが、"+price+"円にアップした！！！");
-        return n;
     }
     //      指定枚数開く
     int open(Player p,int num){
@@ -176,13 +172,15 @@ public class Lottery {
                 current_stock = 0;
                 win++;
                 depositMoney(p,payout);
-                saveConfig();
+                LotteryPlugin.es.execute(this::saveConfig);
+
                 playSound(p);
                 return n;
             }
         }
 
-        saveConfig();
+        LotteryPlugin.es.execute(this::saveConfig);
+
         double price = prize + current_stock;
         p.sendMessage(prefix + "  §9§lはずれ!!!§f("+num+"枚) §f§l現在の賞金＋ストックは§e§l"+price+"円です");
         return n;
@@ -199,40 +197,39 @@ public class Lottery {
     }
 
 
-    boolean playSound(Player p){
-        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_DEATH,1,2);
-        return true;
+    void playSound(Player p){
+        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH,1,2);
     }
 
-    Material controllerMaterial = Material.PAPER;
-
-    boolean isController(ItemStack item){
-        if(item.getType() != controllerMaterial){
-            return false;
-        }
-        String name = item.getItemMeta().getDisplayName();
-        if(name == null){
-            return false;
-        }
-        if(dispName == null){
-            return false;
-        }
-
-        if(!dispName.contentEquals(name)){
-            return false;
-        }
-        return true;
-    }
-
-
-    void giveController(Player p){
-        ItemStack item = new ItemStack(controllerMaterial,1);
-        ItemMeta im = item.getItemMeta();
-        im.setDisplayName(dispName);
-        im.setLore(lore);
-        item.setItemMeta(im);
-        p.getInventory().addItem(item);
-    }
+//    Material controllerMaterial = Material.PAPER;
+//
+//    boolean isController(ItemStack item){
+//        if(item.getType() != controllerMaterial){
+//            return false;
+//        }
+//        String name = item.getItemMeta().getDisplayName();
+//        if(name == null){
+//            return false;
+//        }
+//        if(dispName == null){
+//            return false;
+//        }
+//
+//        if(!dispName.contentEquals(name)){
+//            return false;
+//        }
+//        return true;
+//    }
+//
+//
+//    void giveController(Player p){
+//        ItemStack item = new ItemStack(controllerMaterial,1);
+//        ItemMeta im = item.getItemMeta();
+//        im.setDisplayName(dispName);
+//        im.setLore(lore);
+//        item.setItemMeta(im);
+//        p.getInventory().addItem(item);
+//    }
 
 
 }

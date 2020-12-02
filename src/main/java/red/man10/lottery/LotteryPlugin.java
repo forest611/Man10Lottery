@@ -3,24 +3,25 @@ package red.man10.lottery;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import red.man10.VaultManager;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public final class LotteryPlugin extends JavaPlugin implements Listener {
     VaultManager vault = null;
+
+    Boolean enable = true;
+
+    static Executor es = Executors.newCachedThreadPool();
+
     @Override
     public void onEnable() {
         // Plugin startup logic
-        getServer().getPluginManager().registerEvents (this,this);
-        this.saveDefaultConfig();
+        saveDefaultConfig();
         loadLottery();
         vault = new VaultManager(this);
 
@@ -36,32 +37,35 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
     //      コマンド処理
     /////////////////////////////////
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         Player p = (Player) sender;
-
         //      引数がない場合
         if (args.length == 0) {
+            if (!p.hasPermission("man10.lottery.op"))return false;
             showHelp(sender);
             return true;
         }
         if(args[0].equalsIgnoreCase("help")){
+            if (!p.hasPermission("man10.lottery.op"))return false;
             showHelp(p);
             return true;
         }
         if(args[0].equalsIgnoreCase("reload")){
+            if (!p.hasPermission("man10.lottery.op"))return false;
             sender.sendMessage("reloaded.");
             reloadConfig();
             return true;
         }
 
         if(args[0].equalsIgnoreCase("buy")){
+            if (!p.hasPermission("man10.lottery.user"))return false;
             int     n = 1;
             if(args.length == 3){
                 n = Integer.parseInt(args[2]);
             }
 
             Lottery l = new Lottery(this);
-            if(l.load(args[1]) == false){
+            if(!l.load(args[1])){
                 p.sendMessage("§4§l"+args[1]+":指定された宝くじはありません");
                 return false;
             }
@@ -70,13 +74,13 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
 
         }
         if(args[0].equalsIgnoreCase("stat")){
-            int     n = 1;
+            if (!p.hasPermission("man10.lottery.op"))return false;
             if(args.length != 2){
                 return false;
             }
 
             Lottery l = new Lottery(this);
-            if(l.load(args[1]) == false){
+            if(!l.load(args[1])){
                 p.sendMessage("§4§l"+args[1]+":指定された宝くじはありません");
                 return false;
             }
@@ -90,60 +94,60 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
 
             return true;
         }
-        if(args[0].equalsIgnoreCase("get")){
-            int     n = 1;
-            if(args.length != 2){
-                return false;
-            }
-
-            Lottery l = new Lottery(this);
-            if(l.load(args[1]) == false){
-                p.sendMessage("§4§l"+args[1]+":指定された宝くじはありません");
-                return false;
-            }
-
-            l.load(args[1]);
-            l.giveController(p);
-
-            return true;
-        }
+//        if(args[0].equalsIgnoreCase("get")){
+//            int     n = 1;
+//            if(args.length != 2){
+//                return false;
+//            }
+//
+//            Lottery l = new Lottery(this);
+//            if(!l.load(args[1])){
+//                p.sendMessage("§4§l"+args[1]+":指定された宝くじはありません");
+//                return false;
+//            }
+//
+//            l.load(args[1]);
+//            l.giveController(p);
+//
+//            return true;
+//        }
 
         return true;
     }
 
-    @EventHandler
-    public void onInvclick(InventoryClickEvent e) {
-        Player p = (Player)e.getWhoClicked();
-      //  p.sendMessage(e.getEventName());
-    }
-
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e) {
-        Player p = (Player)e.getPlayer();
-
-        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK ) {
-           // p.sendMessage("左クリック");
-
-            ItemStack item = p.getInventory().getItemInMainHand();
-            if(nano.isController(item)){
-                nano.open(p,item.getAmount());
-                item.setAmount(0);
-            }
-            if(mini.isController(item)){
-                mini.open(p,item.getAmount());
-                item.setAmount(0);
-            }
-            if(nom.isController(item)){
-                nom.open(p,item.getAmount());
-                item.setAmount(0);
-            }
-            if(big.isController(item)){
-                big.open(p,item.getAmount());
-                item.setAmount(0);
-            }
-
-        }
-    }
+//    @EventHandler
+//    public void onInvclick(InventoryClickEvent e) {
+//        Player p = (Player)e.getWhoClicked();
+//      //  p.sendMessage(e.getEventName());
+//    }
+//
+//    @EventHandler
+//    public void onPlayerInteract(PlayerInteractEvent e) {
+//        Player p = e.getPlayer();
+//
+//        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK ) {
+//           // p.sendMessage("左クリック");
+//
+//            ItemStack item = p.getInventory().getItemInMainHand();
+//            if(nano.isController(item)){
+//                nano.open(p,item.getAmount());
+//                item.setAmount(0);
+//            }
+//            if(mini.isController(item)){
+//                mini.open(p,item.getAmount());
+//                item.setAmount(0);
+//            }
+//            if(nom.isController(item)){
+//                nom.open(p,item.getAmount());
+//                item.setAmount(0);
+//            }
+//            if(big.isController(item)){
+//                big.open(p,item.getAmount());
+//                item.setAmount(0);
+//            }
+//
+//        }
+//    }
 
     void showHelp(CommandSender p){
         p.sendMessage("§e============== §d●§f●§a●§e Man10宝くじ §d●§f●§a● §e===============");
@@ -162,7 +166,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
     Lottery    nom = new Lottery(this);
     Lottery    big = new Lottery(this);
 
-    void       loadLottery(){
+    void  loadLottery(){
         nano.load("Man10Nano");
         mini.load("Man10Mini");
         nom.load("Man10");
