@@ -145,6 +145,10 @@ public class Lottery {
 
                     playSound(p);
 
+                    if (name.equals("Man10Big")){
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"bungeee alert Man10Bigが当選しました！");
+                    }
+
                     return;
                 }
             }
