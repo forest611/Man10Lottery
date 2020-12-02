@@ -18,6 +18,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
     VaultManager vault = null;
 
     Boolean enable = true;
+    int buyNumber = 500;
 
     static Executor es = Executors.newCachedThreadPool();
 
@@ -29,6 +30,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         vault = new VaultManager(this);
 
         enable = getConfig().getBoolean("enable");
+        buyNumber = getConfig().getInt("buyNumber");
 
         saveThread();
 
@@ -67,7 +69,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
 
             int num = Integer.parseInt(args[0]);
 
-            if (num >1000){
+            if (num >buyNumber){
                 p.sendMessage("§4§l買いすぎです！");
                 return false;
             }
