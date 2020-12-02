@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -27,6 +29,8 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         vault = new VaultManager(this);
 
         enable = getConfig().getBoolean("enable");
+
+        saveThread();
 
     }
 
@@ -97,8 +101,9 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
                 n = Integer.parseInt(args[2]);
             }
 
-            Lottery l = new Lottery(this);
-            if(!l.load(args[1])){
+            Lottery l = lotteryMap.get(args[1]);
+
+            if(l==null){
                 p.sendMessage("§4§l"+args[1]+":指定された宝くじはありません");
                 return false;
             }
@@ -111,8 +116,8 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
                 return false;
             }
 
-            Lottery l = new Lottery(this);
-            if(!l.load(args[1])){
+            Lottery l = lotteryMap.get(args[1]);
+            if(l == null){
                 p.sendMessage("§4§l"+args[1]+":指定された宝くじはありません");
                 return false;
             }
@@ -219,14 +224,39 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
     Lottery    mini = new Lottery(this);
     Lottery    nom = new Lottery(this);
     Lottery    big = new Lottery(this);
+    HashMap<String,Lottery> lotteryMap = new HashMap();
 
     void  loadLottery(){
         nano.load("Man10Nano");
         mini.load("Man10Mini");
         nom.load("Man10");
         big.load("Man10Big");
+
+        lotteryMap.put("Man10Nano",nano);
+        lotteryMap.put("Man10Mini",mini);
+        lotteryMap.put("Man10",nom);
+        lotteryMap.put("Man10Big",big);
+
     }
 
+    void saveThread(){
 
+        new Thread(() -> {
+
+            while (true){
+                for (Lottery l : lotteryMap.values()){
+                    l.saveConfig();
+                }
+
+                try {
+                    //一分に一回セーブする
+                    Thread.sleep(60000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }).start();
+    }
 
 }

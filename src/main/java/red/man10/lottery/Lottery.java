@@ -145,8 +145,6 @@ public class Lottery {
 
                     playSound(p);
 
-                    LotteryPlugin.es.execute(this::saveConfig);
-
                     return;
                 }
             }
@@ -155,8 +153,6 @@ public class Lottery {
 
         double paid = price * n;
         double price = prize + current_stock;
-
-        LotteryPlugin.es.execute(this::saveConfig);
 
         p.sendMessage(prefix + " " + dispName+"を"+n+"枚購入し、" + String.format("%,.1f",paid)+"円支払いました");
         p.sendMessage(prefix + " はずれ！ §e§l賞金＋ストックが、"+String.format("%,.1f",price)+"円にアップした！！！");
@@ -175,14 +171,11 @@ public class Lottery {
                 current_stock = 0;
                 win++;
                 depositMoney(p,payout);
-                LotteryPlugin.es.execute(this::saveConfig);
 
                 playSound(p);
                 return n;
             }
         }
-
-        LotteryPlugin.es.execute(this::saveConfig);
 
         double price = prize + current_stock;
         p.sendMessage(prefix + "  §9§lはずれ!!!§f("+num+"枚) §f§l現在の賞金＋ストックは§e§l"+price+"円です");
