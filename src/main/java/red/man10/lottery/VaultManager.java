@@ -73,10 +73,6 @@ public class VaultManager {
     /////////////////////////////////////
     public Boolean  withdraw(UUID uuid, double money){
         OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-        if(p == null){
-            Bukkit.getLogger().warning(uuid.toString()+"は見つからない");
-            return false;
-        }
         EconomyResponse resp = economy.withdrawPlayer(p,money);
         if(resp.transactionSuccess()){
             if(p.isOnline()) {

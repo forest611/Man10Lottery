@@ -102,6 +102,11 @@ public class Lottery {
 //    }
 
     int check(Player p){
+
+        if (!withdrawMoney(p,price)){
+            return -1;
+        }
+
         count ++;
 
         boolean result = cast(p);
@@ -121,40 +126,44 @@ public class Lottery {
         int n = 0;
         for(int i = 0;i < num;i++){
             int ret = check(p);
-            if(ret == -1){
-                LotteryPlugin.es.execute(this::saveConfig);
 
-                p.sendMessage(prefix + " §2&l宝くじを買うお金が足りません");
-                return;
+            switch (ret){
+                case -1:{
+                    p.sendMessage(prefix + " §2&l宝くじを買うお金が足りません");
+                    return;
+
+                }
+
+                case -2:{
+                    p.sendMessage(prefix + " §2&l支払いに失敗しました");
+                    return;
+                }
+
+                case 0:{
+                    double payout = prize + current_stock;
+                    serverMessage(" §b§l§n " + this.dispName+ " 当選！！！！   ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!! ");
+                    serverMessage(" §4§l§n" + p.getName() + "は"+n+"枚購入し、当選した！！");
+                    serverMessage(" §6§l§n"+ p.getName()+"は"+payout+"円をゲットした！！！！");
+                    current_stock = 0;
+                    win++;
+                    depositMoney(p,payout);
+
+//                    LotteryPlugin.es.execute(this::saveConfig);
+
+                    playSound(p);
+
+                    LotteryPlugin.es.execute(this::saveConfig);
+
+                    return;
+                }
             }
-            if(ret == -2){
-                LotteryPlugin.es.execute(this::saveConfig);
-                p.sendMessage(prefix + " §2&l支払いに失敗しました");
-                return;
-            }
-            n++;
-            //      あたり
-            if(ret == 0){
-                double payout = prize + current_stock;
-                serverMessage(" §b§l§n " + this.dispName+ " 当選！！！！   ｷﾀ━━━━(ﾟ∀ﾟ)━━━━!! ");
-                serverMessage(" §4§l§n" + p.getName() + "は"+n+"枚購入し、当選した！！");
-                serverMessage(" §6§l§n"+ p.getName()+"は"+payout+"円をゲットした！！！！");
-                current_stock = 0;
-                win++;
-                depositMoney(p,payout);
-
-                LotteryPlugin.es.execute(this::saveConfig);
-
-                playSound(p);
-
-               return;
-             }
         }
+
+        double paid = price * n;
+        double price = prize + current_stock;
 
         LotteryPlugin.es.execute(this::saveConfig);
 
-          double paid = price * n;
-         double price = prize + current_stock;
         p.sendMessage(prefix + " " + dispName+"を"+n+"枚購入し、" + paid+"円支払いました");
         p.sendMessage(prefix + " はずれ！ §e§l賞金＋ストックが、"+price+"円にアップした！！！");
     }
@@ -190,10 +199,7 @@ public class Lottery {
     boolean cast(Player p){
         Random rndSeed = new Random();
         int val = rndSeed.nextInt(max_chance);
-        if(val == 0){
-            return true;
-        }
-        return false;
+        return val == 0;
     }
 
 

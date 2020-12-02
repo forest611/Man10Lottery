@@ -56,12 +56,12 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
                 return false;
             }
 
-            if (!NumberUtils.isNumber(args[1])){
+            if (args.length ==0 || !NumberUtils.isNumber(args[0])){
                 p.sendMessage("§c/big <枚数>");
                 return true;
             }
 
-            int num = Integer.parseInt(args[1]);
+            int num = Integer.parseInt(args[0]);
 
             if (num >1000){
                 p.sendMessage("§4§l買いすぎです！");
@@ -133,6 +133,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
 
             es.execute(() -> {
                 getConfig().set("enable",enable);
+                saveConfig();
             });
 
         }
@@ -143,6 +144,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
 
             es.execute(() -> {
                 getConfig().set("enable",enable);
+                saveConfig();
             });
 
         }
