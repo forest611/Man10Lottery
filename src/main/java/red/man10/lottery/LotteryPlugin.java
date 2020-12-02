@@ -1,6 +1,7 @@
 package red.man10.lottery;
 
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,26 +40,44 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         Player p = (Player) sender;
+
+
+        //鯖民用購入コマンド
+        if (label.equalsIgnoreCase("big")){
+            if (!p.hasPermission("man10lottery.user")){
+                p.sendMessage("§4s§lあなたはくじを買うことができません！");
+                return false;
+            }
+
+            if (!NumberUtils.isNumber(args[1])){
+                p.sendMessage("§c/big <枚数>");
+                return true;
+            }
+
+            big.buy(p,Integer.parseInt(args[1]));
+
+            return true;
+
+        }
+
+        if (!p.hasPermission("man10.lottery.op"))return false;
+
         //      引数がない場合
         if (args.length == 0) {
-            if (!p.hasPermission("man10.lottery.op"))return false;
             showHelp(sender);
             return true;
         }
         if(args[0].equalsIgnoreCase("help")){
-            if (!p.hasPermission("man10.lottery.op"))return false;
             showHelp(p);
             return true;
         }
         if(args[0].equalsIgnoreCase("reload")){
-            if (!p.hasPermission("man10.lottery.op"))return false;
             sender.sendMessage("reloaded.");
             reloadConfig();
             return true;
         }
 
         if(args[0].equalsIgnoreCase("buy")){
-            if (!p.hasPermission("man10.lottery.user"))return false;
             int     n = 1;
             if(args.length == 3){
                 n = Integer.parseInt(args[2]);
@@ -74,7 +93,6 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
 
         }
         if(args[0].equalsIgnoreCase("stat")){
-            if (!p.hasPermission("man10.lottery.op"))return false;
             if(args.length != 2){
                 return false;
             }

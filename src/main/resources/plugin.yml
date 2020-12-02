@@ -7,3 +7,5 @@ website: http://man10.red
 commands:
    mkuji:
       description: Man10 Lottery
+   big:
+      description: Man10 Lottery
