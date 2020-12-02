@@ -122,13 +122,13 @@ public class Lottery {
         for(int i = 0;i < num;i++){
             int ret = check(p);
             if(ret == -1){
-                saveConfig();
+                LotteryPlugin.es.execute(this::saveConfig);
 
                 p.sendMessage(prefix + " §2&l宝くじを買うお金が足りません");
                 return;
             }
             if(ret == -2){
-                saveConfig();
+                LotteryPlugin.es.execute(this::saveConfig);
                 p.sendMessage(prefix + " §2&l支払いに失敗しました");
                 return;
             }

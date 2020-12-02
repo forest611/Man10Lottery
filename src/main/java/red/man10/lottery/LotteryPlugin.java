@@ -26,6 +26,8 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         loadLottery();
         vault = new VaultManager(this);
 
+        enable = getConfig().getBoolean("enable");
+
     }
 
     @Override
@@ -49,12 +51,24 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
                 return false;
             }
 
+            if (!enable){
+                p.sendMessage("§c現在Man10Bigは開催していません");
+                return false;
+            }
+
             if (!NumberUtils.isNumber(args[1])){
                 p.sendMessage("§c/big <枚数>");
                 return true;
             }
 
-            big.buy(p,Integer.parseInt(args[1]));
+            int num = Integer.parseInt(args[1]);
+
+            if (num >1000){
+                p.sendMessage("§4§l買いすぎです！");
+                return false;
+            }
+
+            big.buy(p,num);
 
             return true;
 
@@ -111,6 +125,26 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
             p.sendMessage(l.prefix+ "確率: 1/"+l.count / l.win);
 
             return true;
+        }
+
+        if (args[0].equalsIgnoreCase("off")){
+            enable = false;
+            p.sendMessage(enable.toString());
+
+            es.execute(() -> {
+                getConfig().set("enable",enable);
+            });
+
+        }
+
+        if (args[0].equalsIgnoreCase("on")){
+            enable = true;
+            p.sendMessage(enable.toString());
+
+            es.execute(() -> {
+                getConfig().set("enable",enable);
+            });
+
         }
 //        if(args[0].equalsIgnoreCase("get")){
 //            int     n = 1;
