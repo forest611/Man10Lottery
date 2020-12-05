@@ -94,6 +94,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         if(args[0].equalsIgnoreCase("reload")){
             sender.sendMessage("reloaded.");
             reloadConfig();
+            loadLottery();
             return true;
         }
 
@@ -246,9 +247,6 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
         new Thread(() -> {
 
             while (true){
-                for (Lottery l : lotteryMap.values()){
-                    l.saveConfig();
-                }
 
                 try {
                     //一分に一回セーブする
@@ -256,6 +254,11 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                for (Lottery l : lotteryMap.values()){
+                    l.saveConfig();
+                }
+
             }
 
         }).start();
