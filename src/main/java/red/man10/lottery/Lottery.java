@@ -48,10 +48,10 @@ public class Lottery {
         plugin.saveConfig();
 
     }
-    public boolean load(String name){
+    public void load(String name){
         Object o = plugin.getConfig().get(name);
         if(o == null){
-           return false;
+           return;
         }
 
         this.name = name;
@@ -67,7 +67,6 @@ public class Lottery {
         this.stock = plugin.getConfig().getDouble(name+".stock");
         this.current_stock = plugin.getConfig().getDouble(name+".current_stock");
         this.lore = plugin.getConfig().getStringList(name+".lore");
-        return true;
     }
     public String desc(){
         String s = name + "disp:"+dispName +"max_chance:"+max_chance +"prize:"+prize + " price"+price +" stock:" +stock + " current_stock:" + current_stock + " lore"+lore;

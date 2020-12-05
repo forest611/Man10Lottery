@@ -9,3 +9,9 @@ commands:
       description: Man10 Lottery
    big:
       description: Man10 Lottery
+   normal:
+      description: Man10 Lottery
+   mini:
+      description: Man10 Lottery
+   nano:
+      description: Man10 Lottery

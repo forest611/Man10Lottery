@@ -9,8 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -19,6 +18,8 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
 
     Boolean enable = true;
     int buyNumber = 500;
+
+    List<String> labels = new ArrayList<>(Arrays.asList("big", "normal", "mini", "nano"));
 
     static Executor es = Executors.newCachedThreadPool();
 
@@ -51,7 +52,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
 
 
         //鯖民用購入コマンド
-        if (label.equalsIgnoreCase("big")){
+        if (labels.contains(label)){
             if (!p.hasPermission("man10lottery.user")){
                 p.sendMessage("§4s§lあなたはくじを買うことができません！");
                 return false;
@@ -63,7 +64,7 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
             }
 
             if (args.length ==0 || !NumberUtils.isNumber(args[0])){
-                p.sendMessage("§c/big <枚数>");
+                p.sendMessage("§c/"+label+" <枚数>");
                 return true;
             }
 
@@ -74,7 +75,12 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
                 return false;
             }
 
-            big.buy(p,num);
+            switch (label){
+                case "big": big.buy(p,num);break;
+                case "normal": nom.buy(p,num);break;
+                case "nano": nano.buy(p,num);break;
+                case "mini": mini.buy(p,num);break;
+            }
 
             return true;
 
@@ -230,6 +236,8 @@ public final class LotteryPlugin extends JavaPlugin implements Listener {
     HashMap<String,Lottery> lotteryMap = new HashMap();
 
     void  loadLottery(){
+        lotteryMap.clear();
+
         nano.load("Man10Nano");
         mini.load("Man10Mini");
         nom.load("Man10");
