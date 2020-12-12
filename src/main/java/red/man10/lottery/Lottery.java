@@ -31,6 +31,7 @@ public class Lottery {
 
 
     boolean withdrawMoney(Player p,double price){
+        if (plugin.vault.getBalance(p.getUniqueId())<price)return false;
         return plugin.vault.withdraw(p.getUniqueId(),price);
     }
 
